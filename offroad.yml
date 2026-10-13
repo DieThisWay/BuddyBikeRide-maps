@@ -1,0 +1,64 @@
+schema_name: BuddyBikeRide off-road
+schema_description: Dirt roads, tracks, trails and fords visible from far out, for drawing long off-road routes
+attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
+args:
+  area:
+    description: Geofabrik area name
+    default: moldova
+  minzoom: 0
+  maxzoom: 14
+sources:
+  osm:
+    type: osm
+    url: '${ "geofabrik:" + args.area }'
+layers:
+- id: transportation
+  features:
+  - source: osm
+    geometry: line
+    min_zoom:
+      default_value: 11
+      overrides:
+        9:
+          highway: track
+        10:
+          highway: [path, bridleway, cycleway]
+    include_when:
+      - highway: [track, path, bridleway, cycleway]
+      - __all__:
+          highway: [unclassified, residential, service, tertiary, secondary]
+          surface: [unpaved, compacted, dirt, earth, fine_gravel, grass, grass_paver, gravel, gravel_turf, ground, ice, mud, pebblestone, salt, sand, snow, woodchips]
+    exclude_when:
+      access: [private, no]
+    min_size: 2
+    attributes:
+    - key: class
+      value:
+        track:
+          highway: track
+        path:
+          highway: [path, bridleway, cycleway]
+        minor: otherwise
+    - key: subclass
+      tag_value: highway
+    - key: surface
+      value:
+        paved:
+          - surface: [paved, asphalt, cobblestone, concrete, 'concrete:lanes', 'concrete:plates', metal, paving_stones, sett, unhewn_cobblestone, wood]
+          - __all__:
+              highway: cycleway
+              surface: ''
+        unpaved: otherwise
+    - key: brunnel
+      value:
+        ford:
+          ford: yes
+        bridge:
+          bridge: __any__
+        tunnel:
+          tunnel: __any__
+  tile_post_process:
+    merge_line_strings:
+      min_length: 1
+      tolerance: 0.5
+      buffer: 4

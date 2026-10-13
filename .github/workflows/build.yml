@@ -1,0 +1,104 @@
+name: Build country maps
+
+# Rebuilt once a month from fresh OpenStreetMap data; the app offers the new files as an update.
+on:
+  schedule:
+    - cron: '0 3 2 * *'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Country ids separated by spaces (empty = all from countries.json)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+      tag: ${{ steps.list.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        env:
+          ONLY: ${{ inputs.only }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          only = os.environ.get('ONLY', '').split()
+          items = [c for c in json.load(open('countries.json')) if not only or c['id'] in only]
+          print('matrix=' + json.dumps({'include': [{'id': c['id'], 'geofabrik': c['geofabrik']} for c in items]}))
+          PY
+          echo "tag=maps-$(date -u +%Y-%m-%d-%H%M)" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Download OpenStreetMap data
+        run: |
+          mkdir -p data out
+          curl -fsSL --retry 3 -o data/area.osm.pbf "https://download.geofabrik.de/${{ matrix.geofabrik }}-latest.osm.pbf"
+          curl -fsSL --retry 3 -o data/area.poly "https://download.geofabrik.de/${{ matrix.geofabrik }}.poly"
+          curl -fsSL --retry 3 -o planetiler.jar https://github.com/onthegomap/planetiler/releases/download/v0.9.3/planetiler.jar
+      - name: Build tiles
+        run: |
+          java -Xmx10g -jar planetiler.jar generate-custom --schema=offroad.yml \
+            --osm_path=data/area.osm.pbf --output=out/${{ matrix.id }}.pmtiles --force --nodemap-type=array --storage=mmap
+          python3 scripts/boundary.py data/area.poly out/${{ matrix.id }}.json
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.id }}
+          path: out/
+          retention-days: 3
+
+  publish:
+    needs: [prepare, build]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: built
+          merge-multiple: true
+      - name: Keep last month's files for countries that failed this time
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p built
+          if gh release download --repo "$GITHUB_REPOSITORY" --pattern manifest.json --dir old 2>/dev/null; then
+            python3 - <<'PY'
+          import json, os, subprocess
+          old = json.load(open('old/manifest.json'))
+          for cid, c in old['countries'].items():
+              if not os.path.exists(f'built/{cid}.pmtiles'):
+                  subprocess.run(['curl', '-fsSL', '-o', f'built/{cid}.pmtiles', c['url']], check=True)
+                  json.dump({'bbox': c['bbox'], 'boundary': c['boundary']}, open(f'built/{cid}.json', 'w'))
+          PY
+          fi
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+        run: |
+          python3 scripts/manifest.py "$TAG" "$GITHUB_REPOSITORY" built
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TAG" --latest \
+            --notes "Off-road map files built from OpenStreetMap data (© OpenStreetMap contributors, ODbL)." \
+            built/manifest.json built/*.pmtiles
+          # Keep the two newest releases so phones mid-download still find their file.
+          gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName --jq '.[2:][].tagName' |
+            while read -r old; do gh release delete "$old" --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag; done
