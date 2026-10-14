@@ -55,7 +55,8 @@ def main(poly, out):
     bbox = [round(min(xs), 4), round(min(ys), 4), round(max(xs), 4), round(max(ys), 4)]
     tol = 0.01
     while True:
-        outline = [simplify(r, tol) for r in rings]
+        # A closed ring starts and ends at the same point, so simplify its two halves.
+        outline = [simplify(r[: len(r) // 2 + 1], tol)[:-1] + simplify(r[len(r) // 2 :], tol) for r in rings]
         outline = [r for r in outline if len(r) >= 4]
         if sum(len(r) for r in outline) <= 600:
             break
