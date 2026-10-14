@@ -37,6 +37,7 @@ jobs:
   build:
     needs: prepare
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       max-parallel: 6
@@ -56,7 +57,7 @@ jobs:
       - name: Build tiles
         run: |
           java -Xmx10g -jar planetiler.jar generate-custom --schema=offroad.yml \
-            --osm_path=data/area.osm.pbf --output=out/${{ matrix.id }}.pmtiles --force --nodemap-type=array --storage=mmap
+            --osm_path=data/area.osm.pbf --output=out/${{ matrix.id }}.pmtiles --force --storage=mmap
           python3 scripts/boundary.py data/area.poly out/${{ matrix.id }}.json
           ls -la out
       - uses: actions/upload-artifact@v4
