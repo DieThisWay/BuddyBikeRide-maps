@@ -1,0 +1,46 @@
+{
+  "version": 8,
+  "name": "BuddyBikeRide offline download",
+  "metadata": {
+    "about": "The app downloads offline base maps with this style. Its tiles, fonts and icons must match the map the app draws: OpenFreeMap Liberty with its tiles at the fixed planet/latest address."
+  },
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "tiles": ["https://tiles.openfreemap.org/planet/latest/{z}/{x}/{y}.pbf"],
+      "minzoom": 0,
+      "maxzoom": 14
+    },
+    "ne2_shaded": {
+      "type": "raster",
+      "tiles": ["https://tiles.openfreemap.org/natural_earth/ne2sr/{z}/{x}/{y}.png"],
+      "tileSize": 256,
+      "maxzoom": 6
+    }
+  },
+  "sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
+  "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "font-regular",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "layout": { "text-field": "{name}", "text-font": ["Noto Sans Regular"] }
+    },
+    {
+      "id": "font-bold",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "layout": { "text-field": "{name}", "text-font": ["Noto Sans Bold"] }
+    },
+    {
+      "id": "font-italic",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "layout": { "text-field": "{name}", "text-font": ["Noto Sans Italic"] }
+    }
+  ]
+}
