@@ -23,16 +23,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check the offline download style still matches OpenFreeMap
-        # The app downloads base maps with download-style.json; its icons and fonts must be the ones the map draws.
+        # The app downloads base maps with download-style-v1.json; its icons and fonts must be the ones the map draws.
         continue-on-error: true
         run: |
           python3 - <<'PY'
           import json, urllib.request
           live = json.load(urllib.request.urlopen('https://tiles.openfreemap.org/styles/liberty'))
-          ours = json.load(open('download-style.json'))
+          ours = json.load(open('download-style-v1.json'))
           for key in ('sprite', 'glyphs'):
               if live.get(key) != ours.get(key):
-                  print(f"::warning::download-style.json {key} is {ours.get(key)!r}, OpenFreeMap now uses {live.get(key)!r}")
+                  print(f"::warning::download-style-v1.json {key} is {ours.get(key)!r}, OpenFreeMap now uses {live.get(key)!r}")
           PY
       - id: list
         env:
