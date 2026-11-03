@@ -4,33 +4,107 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BuddyBikeRide — маршруты</title>
-  <script type="module" crossorigin src="./assets/index-CWWNfcvE.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CxzJuPSZ.css">
+<script>
+  // Theme before the first paint, so a night-mode visitor doesn't get a white flash.
+  try {
+    var t = localStorage.getItem('theme');
+    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+</script>
+  <script type="module" crossorigin src="./assets/index-BWJhHiDk.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BT1UoKve.css">
 </head>
 <body>
-<aside id="side">
-  <header><b>BuddyBikeRide</b><span id="who"></span></header>
-  <div id="auth"></div>
-  <div id="list"></div>
-  <div id="edit" hidden>
-    <input id="name" maxlength="60" placeholder="Название">
-    <div id="km"></div>
-    <div class="row">
-      <label class="toggle"><input type="checkbox" id="magnet"> 🧲 Магнит к дорогам</label>
+<header id="top">
+  <a class="brand" href="./">BuddyBikeRide</a>
+
+  <nav id="tabs" role="tablist">
+    <button type="button" role="tab" id="tabRoutes" data-i18n="tabRoutes">Мои маршруты</button>
+    <button type="button" role="tab" id="tabEditor" data-i18n="tabEditor">Редактор</button>
+  </nav>
+
+  <button type="button" id="burger" aria-expanded="false" aria-controls="tools" data-i18n-title="menu">
+    <span class="bars" aria-hidden="true"></span>
+  </button>
+
+  <div id="tools">
+    <div class="seg" id="langSwitch" role="group" data-i18n-title="language">
+      <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+      <button type="button" data-lang="ro" aria-pressed="false">RO</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
     </div>
-    <div class="row">
-      <button id="undo">↶ Шаг назад</button>
-      <button id="reverse">⇄ Развернуть</button>
-      <button id="clear">Очистить</button>
+    <button type="button" id="themeBtn" class="icon-btn"></button>
+    <div id="acct">
+      <button type="button" id="signInTop" class="main" data-i18n="signIn" hidden>Войти через Google</button>
+      <button type="button" id="acctBtn" aria-haspopup="true" aria-expanded="false" hidden>
+        <span class="avatar" id="avatar"></span><span id="acctName"></span><span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <div id="acctMenu" hidden>
+        <div class="who" id="acctEmail"></div>
+        <button type="button" id="menuImport" data-i18n="importGpx">Импорт GPX</button>
+        <button type="button" id="menuSignOut" data-i18n="signOut">Выйти</button>
+      </div>
     </div>
-    <div class="row">
-      <button id="save" class="main">Сохранить</button>
-      <button id="cancel">Закрыть</button>
-    </div>
-    <p class="tip">Клик по карте — новая точка. Точку можно перетащить. Клик по точке выбирает её, второй клик удаляет. «+» в середине отрезка вставляет точку. Магнит берёт дороги, видимые на экране: приблизьте карту.</p>
   </div>
-  <div id="note"></div>
-</aside>
-<div id="map"></div>
+</header>
+
+<div id="app">
+  <aside id="side">
+    <!-- signed out -->
+    <section id="authView" class="view">
+      <div class="card">
+        <h2 data-i18n="signInTitle">Ваши маршруты</h2>
+        <p class="tip" data-i18n="signInHint">Войдите тем же Google-аккаунтом, что в приложении (Настройки → Общее). Маршруты появятся в «Моих маршрутах» на телефоне.</p>
+        <button type="button" id="signInMain" class="main wide" data-i18n="signIn">Войти через Google</button>
+      </div>
+    </section>
+
+    <!-- «Мои маршруты» -->
+    <section id="routesView" class="view" hidden>
+      <div class="bar">
+        <button type="button" id="newRoute" class="main" data-i18n="newRoute">+ Новый маршрут</button>
+        <button type="button" id="importBtn" data-i18n="importGpx">Импорт GPX</button>
+      </div>
+      <div id="list"></div>
+    </section>
+
+    <!-- «Редактор» -->
+    <section id="editView" class="view" hidden>
+      <div class="scroll">
+        <div class="group">
+          <input id="name" maxlength="60" data-i18n-ph="namePh" placeholder="Название">
+          <div id="km"></div>
+        </div>
+        <div class="group">
+          <h3 data-i18n="tools">Инструменты</h3>
+          <label class="switch">
+            <input type="checkbox" id="magnet">
+            <span class="track" aria-hidden="true"></span>
+            <span data-i18n="magnet">🧲 Магнит к дорогам</span>
+          </label>
+          <div class="row">
+            <button type="button" id="undo" data-i18n="undo">↶ Шаг назад</button>
+            <button type="button" id="reverse" data-i18n="reverse">⇄ Развернуть</button>
+            <button type="button" id="clear" data-i18n="clear">Очистить</button>
+          </div>
+          <div class="row">
+            <button type="button" id="exportBtn" data-i18n="downloadGpx">Скачать GPX</button>
+          </div>
+        </div>
+        <details class="group help">
+          <summary data-i18n="help">Как пользоваться</summary>
+          <p class="tip" data-i18n="tip">Клик по карте — новая точка. Точку можно перетащить. Клик по точке выбирает её, второй клик удаляет. «+» в середине отрезка вставляет точку. Магнит берёт дороги, видимые на экране: приблизьте карту.</p>
+        </details>
+      </div>
+      <footer class="actions">
+        <button type="button" id="cancel" data-i18n="back">← К маршрутам</button>
+        <button type="button" id="save" class="main" data-i18n="save">Сохранить</button>
+      </footer>
+    </section>
+  </aside>
+  <div id="map"></div>
+</div>
+<div id="note" role="status" aria-live="polite"></div>
 </body>
 </html>
