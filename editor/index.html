@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BuddyBikeRide — маршруты</title>
+  <script type="module" crossorigin src="./assets/index-BvMAcdzi.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CxzJuPSZ.css">
+</head>
+<body>
+<aside id="side">
+  <header><b>BuddyBikeRide</b><span id="who"></span></header>
+  <div id="auth"></div>
+  <div id="list"></div>
+  <div id="edit" hidden>
+    <input id="name" maxlength="60" placeholder="Название">
+    <div id="km"></div>
+    <div class="row">
+      <label class="toggle"><input type="checkbox" id="magnet"> 🧲 Магнит к дорогам</label>
+    </div>
+    <div class="row">
+      <button id="undo">↶ Шаг назад</button>
+      <button id="reverse">⇄ Развернуть</button>
+      <button id="clear">Очистить</button>
+    </div>
+    <div class="row">
+      <button id="save" class="main">Сохранить</button>
+      <button id="cancel">Закрыть</button>
+    </div>
+    <p class="tip">Клик по карте — новая точка. Точку можно перетащить. Клик по точке выбирает её, второй клик удаляет. «+» в середине отрезка вставляет точку. Магнит берёт дороги, видимые на экране: приблизьте карту.</p>
+  </div>
+  <div id="note"></div>
+</aside>
+<div id="map"></div>
+</body>
+</html>
