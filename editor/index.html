@@ -12,8 +12,8 @@
     document.documentElement.dataset.theme = t;
   } catch (e) { document.documentElement.dataset.theme = 'light'; }
 </script>
-  <script type="module" crossorigin src="./assets/index-Jw0ZtKUu.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BT1UoKve.css">
+  <script type="module" crossorigin src="./assets/index-CV52IrXU.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C9dEE95k.css">
 </head>
 <body>
 <header id="top">
@@ -21,6 +21,7 @@
 
   <nav id="tabs" role="tablist">
     <button type="button" role="tab" id="tabRoutes" data-i18n="tabRoutes">Мои маршруты</button>
+    <button type="button" role="tab" id="tabPlaces" data-i18n="tabPlaces">Мои места</button>
     <button type="button" role="tab" id="tabEditor" data-i18n="tabEditor">Редактор</button>
   </nav>
 
@@ -67,6 +68,45 @@
         <button type="button" id="importBtn" data-i18n="importGpx">Импорт GPX</button>
       </div>
       <div id="list"></div>
+    </section>
+
+    <!-- «Мои места» -->
+    <section id="placesView" class="view" hidden>
+      <div id="placesListView" class="view">
+        <div class="bar">
+          <button type="button" id="newPlace" class="main" data-i18n="newPlace">+ Новое место</button>
+          <select id="placeSort" data-i18n-title="sortBy">
+            <option value="date" data-i18n="sortDate">Сначала новые</option>
+            <option value="category" data-i18n="sortCategory">По категориям</option>
+          </select>
+        </div>
+        <div id="placeList" class="list"></div>
+        <p class="tip pad" data-i18n="placesTip">Правый клик по карте тоже добавляет место.</p>
+      </div>
+      <div id="placeForm" class="view" hidden>
+        <div class="scroll">
+          <h2 id="placeFormTitle"></h2>
+          <div class="group">
+            <h3 data-i18n="category">Категория</h3>
+            <div id="catGrid"></div>
+          </div>
+          <div class="group">
+            <input id="placeTitle" data-i18n-ph="placeTitlePh" placeholder="Название (необязательно)">
+            <textarea id="placeDesc" rows="4" data-i18n-ph="placeDescPh" placeholder="Описание: как проехать, что там, когда лучше"></textarea>
+          </div>
+          <div class="group">
+            <h3 data-i18n="photos">Фото</h3>
+            <div id="placePhotos"></div>
+            <div class="row"><button type="button" id="addPhoto" data-i18n="addPhoto">+ Добавить фото</button></div>
+            <p class="tip" id="photoHint"></p>
+          </div>
+          <p class="tip" id="placeCoords"></p>
+        </div>
+        <footer class="actions">
+          <button type="button" id="placeCancel" data-i18n="cancel">Отмена</button>
+          <button type="button" id="placeSave" class="main" data-i18n="save">Сохранить</button>
+        </footer>
+      </div>
     </section>
 
     <!-- «Редактор» -->
