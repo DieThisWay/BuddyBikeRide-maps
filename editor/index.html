@@ -12,8 +12,8 @@
     document.documentElement.dataset.theme = t;
   } catch (e) { document.documentElement.dataset.theme = 'light'; }
 </script>
-  <script type="module" crossorigin src="./assets/index-DQHNrnC6.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-yWiE2Z8u.css">
+  <script type="module" crossorigin src="./assets/index-yiwzx5eb.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-JoCFPBsR.css">
 </head>
 <body>
 <header id="top">
@@ -65,7 +65,7 @@
     <section id="routesView" class="view" hidden>
       <div class="bar">
         <button type="button" id="newRoute" class="main" data-i18n="newRoute">+ Новый маршрут</button>
-        <button type="button" id="importBtn" data-i18n="importGpx">Импорт GPX</button>
+        <button type="button" id="importBtn" class="ibtn" data-icon="upload"><span data-i18n="importGpx">Импорт GPX</span></button>
       </div>
       <div id="list"></div>
     </section>
@@ -97,7 +97,7 @@
           <div class="group">
             <h3 data-i18n="photos">Фото</h3>
             <div id="placePhotos"></div>
-            <div class="row"><button type="button" id="addPhoto" data-i18n="addPhoto">+ Добавить фото</button></div>
+            <div class="row"><button type="button" id="addPhoto" class="ibtn" data-icon="camera"><span data-i18n="addPhoto">Добавить фото</span></button></div>
             <p class="tip" id="photoHint"></p>
           </div>
           <p class="tip" id="placeCoords"></p>
@@ -124,12 +124,12 @@
             <span data-i18n="magnet">🧲 Магнит к дорогам</span>
           </label>
           <div class="row">
-            <button type="button" id="undo" data-i18n="undo">↶ Шаг назад</button>
-            <button type="button" id="reverse" data-i18n="reverse">⇄ Развернуть</button>
-            <button type="button" id="clear" data-i18n="clear">Очистить</button>
+            <button type="button" id="undo" class="ibtn" data-icon="undo"><span data-i18n="undo">Шаг назад</span></button>
+            <button type="button" id="reverse" class="ibtn" data-icon="reverse"><span data-i18n="reverse">Развернуть</span></button>
+            <button type="button" id="clear" class="ibtn" data-icon="trash"><span data-i18n="clear">Очистить</span></button>
           </div>
           <div class="row">
-            <button type="button" id="exportBtn" data-i18n="downloadGpx">Скачать GPX</button>
+            <button type="button" id="exportBtn" class="ibtn" data-icon="download"><span data-i18n="downloadGpx">Скачать GPX</span></button>
           </div>
         </div>
         <details class="group help">
@@ -138,7 +138,7 @@
         </details>
       </div>
       <footer class="actions">
-        <button type="button" id="cancel" data-i18n="back">← К маршрутам</button>
+        <button type="button" id="cancel" class="ibtn" data-icon="back"><span data-i18n="back">К маршрутам</span></button>
         <button type="button" id="save" class="main" data-i18n="save">Сохранить</button>
       </footer>
     </section>
