@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BuddyBike">
+<meta name="theme-color" content="#8300F7">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./favicon-32.png">
+<title>BuddyBikeRide</title>
+  <script type="module" crossorigin src="./assets/index-D0VNrKsn.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CyE_UrOz.css">
+</head>
+<body>
+<div id="map"></div>
+
+<!-- Sign in / profile / groups -->
+<section id="start" class="sheet full" hidden>
+  <div class="brand">BuddyBikeRide</div>
+  <div id="stepSignIn">
+    <p class="lead">Едем вместе: вы видите друзей на карте, они видят вас.</p>
+    <button type="button" id="signInGoogle" class="main">Войти через Google</button>
+    <button type="button" id="signInAnon" class="ghost">Без входа</button>
+    <p class="small">С Google на этом iPhone появятся ваши места из приложения.</p>
+  </div>
+  <div id="stepGroups" hidden>
+    <label class="field">Ваше имя для группы
+      <input id="myName" maxlength="24" autocomplete="nickname" placeholder="Имя">
+    </label>
+    <h3>Мои группы</h3>
+    <div id="groupList"></div>
+    <label class="field">Вступить по коду
+      <span class="row"><input id="joinCode" maxlength="12" autocapitalize="characters" placeholder="Код группы"><button type="button" id="joinBtn" class="main">Вступить</button></span>
+    </label>
+    <label class="field">Или создать новую
+      <span class="row"><input id="newName" maxlength="40" placeholder="Название"><button type="button" id="createBtn">Создать</button></span>
+    </label>
+    <p id="startErr" class="err"></p>
+    <button type="button" id="signOut" class="ghost">Выйти из аккаунта</button>
+  </div>
+</section>
+
+<!-- On the map -->
+<header id="bar" hidden>
+  <button type="button" id="groupBtn" class="pill"><span id="groupName"></span> <span class="code" id="groupCode"></span></button>
+  <button type="button" id="fitBtn" class="round" title="Показать всех">👥</button>
+</header>
+<div id="warn" hidden>📱 iPhone передаёт ваше место, только пока это приложение открыто и экран включён.</div>
+<div id="paused" hidden>⏸ Ваше место не передавалось, пока экран был выключен. Снова передаю.</div>
+<footer id="bottom" hidden>
+  <div id="riders"></div>
+  <button type="button" id="rideBtn" class="ride">▶ Поехали</button>
+</footer>
+<div id="note"></div>
+</body>
+</html>
