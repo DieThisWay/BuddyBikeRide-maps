@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="icon" href="./favicon-32.png">
 <title>BuddyBikeRide</title>
-  <script type="module" crossorigin src="./assets/index-D0VNrKsn.js"></script>
+  <script type="module" crossorigin src="./assets/index-C0qTTCYF.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-CyE_UrOz.css">
 </head>
 <body>
@@ -40,12 +40,14 @@
       <span class="row"><input id="newName" maxlength="40" placeholder="Название"><button type="button" id="createBtn">Создать</button></span>
     </label>
     <p id="startErr" class="err"></p>
+    <button type="button" id="backToMap" class="main" hidden>← Вернуться на карту</button>
     <button type="button" id="signOut" class="ghost">Выйти из аккаунта</button>
   </div>
 </section>
 
 <!-- On the map -->
 <header id="bar" hidden>
+  <button type="button" id="menuBtn" class="round" title="Меню">☰</button>
   <button type="button" id="groupBtn" class="pill"><span id="groupName"></span> <span class="code" id="groupCode"></span></button>
   <button type="button" id="fitBtn" class="round" title="Показать всех">👥</button>
 </header>
