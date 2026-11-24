@@ -11,12 +11,13 @@
   // Theme before the first paint, so a night-mode visitor doesn't get a white flash.
   try {
     var t = localStorage.getItem('theme');
-    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Day theme unless night was chosen here.
+    if (t !== 'light' && t !== 'dark') t = 'light';
     document.documentElement.dataset.theme = t;
   } catch (e) { document.documentElement.dataset.theme = 'light'; }
 </script>
-  <script type="module" crossorigin src="./assets/index-DW3xlDlF.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DwHoPXkh.css">
+  <script type="module" crossorigin src="./assets/index-lE3FuN8e.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-B0QQWY3T.css">
 </head>
 <body>
 <header id="top">
@@ -28,6 +29,8 @@
     <button type="button" role="tab" id="tabEditor" data-i18n="tabEditor">Редактор</button>
   </nav>
 
+  <button type="button" id="themeBtn" class="icon-btn"></button>
+
   <button type="button" id="burger" aria-expanded="false" aria-controls="tools" data-i18n-title="menu">
     <span class="bars" aria-hidden="true"></span>
   </button>
@@ -38,7 +41,6 @@
       <button type="button" data-lang="ro" aria-pressed="false">RO</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
     </div>
-    <button type="button" id="themeBtn" class="icon-btn"></button>
     <div id="acct">
       <button type="button" id="signInTop" class="main" data-i18n="signIn" hidden>Войти через Google</button>
       <button type="button" id="acctBtn" aria-haspopup="true" aria-expanded="false" hidden>
